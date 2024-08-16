@@ -20,7 +20,7 @@ struct commands {
 
 /* structures for Queue */
 struct Node {
-    int data;
+    char data[70];
     struct Node* next;
 };
 

@@ -1,10 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>  
+#include <stdlib.h> 
+#include <string.h> 
 #define MAX_SIZE 3000
 
 // Define the structure for the queue node
 struct Node {
-    int data;
+    char data[30];
     struct Node* next;
 };
 
@@ -46,7 +47,7 @@ int sizeOf(struct Queue* queue) {
 }
 
 // Function to enqueue an element into the queue
-void enqueue(struct Queue* queue, int data) {
+void enqueue(struct Queue* queue, char data[]) {
     
     if(sizeOf(queue) == MAX_SIZE){
         perror("Maximum Queue Size Reached");
@@ -58,7 +59,7 @@ void enqueue(struct Queue* queue, int data) {
         perror("Memory allocation failed");
         exit(EXIT_FAILURE);
     }
-    newNode->data = data;
+    strcpy(newNode->data, data);
     newNode->next = NULL;
 
     if (isEmpty(queue)) {
@@ -70,14 +71,16 @@ void enqueue(struct Queue* queue, int data) {
 }
 
 // Function to dequeue an element from the queue
-int dequeue(struct Queue* queue) {
+char * dequeue(struct Queue* queue) {
     if (isEmpty(queue)) {
         printf("Queue is empty\n");
         exit(EXIT_FAILURE);
     }
 
+    char *data = (char *)malloc(sizeof(char)*30) ;
+    bzero(data,sizeof data);
     struct Node* temp = queue->front;
-    int data = temp->data;
+    strcpy(data,temp->data);
     queue->front = temp->next;
 
     free(temp);
@@ -85,7 +88,7 @@ int dequeue(struct Queue* queue) {
 }
 
 // Function to get the front element of the queue
-int front(struct Queue* queue) {
+char * front(struct Queue* queue) {
     if (isEmpty(queue)) {
         printf("Queue is empty\n");
         exit(EXIT_FAILURE);
@@ -102,3 +105,21 @@ void freeQueue(struct Queue* queue) {
 }   
 
 
+//Function to return position of request or -1 if request DNE
+int find(struct Queue* queue,char req_id[]){
+    struct Node *temp;
+    temp = queue->front;
+    
+    int foundat=-1;
+    int position = 1;
+    while (temp)
+    {
+        if(!strcmp(temp->data,req_id)){
+            foundat=position;
+            break;
+        }
+        position+=1;
+        temp=temp->next;
+    }
+    return foundat;
+}
